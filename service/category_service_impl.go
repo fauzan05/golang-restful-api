@@ -17,6 +17,14 @@ type CategoryServiceImpl struct {
 	Validate           *validator.Validate
 }
 
+func NewCategoryService(categoryRepository repository.CategoryRepository, db *sql.DB, validate *validator.Validate) CategoryService {
+	return &CategoryServiceImpl{
+		CategoryRepository: categoryRepository,
+		DB: db,
+		Validate: validate,
+	}
+}
+
 func (service *CategoryServiceImpl) Create(ctx context.Context, request web.CategoryCreateRequest) web.CategoryResponse {
 	err := service.Validate.Struct(request)
 	helper.HandleErrorWithPanic(err)
@@ -37,7 +45,7 @@ func (service *CategoryServiceImpl) Create(ctx context.Context, request web.Cate
 func (service *CategoryServiceImpl) Update(ctx context.Context, request web.CategoryUpdateRequest) web.CategoryResponse {
 	err := service.Validate.Struct(request)
 	helper.HandleErrorWithPanic(err)
-	
+
 	tx, err := service.DB.Begin()
 	helper.HandleErrorWithPanic(err)
 	defer helper.CommitOrRollback(tx)
