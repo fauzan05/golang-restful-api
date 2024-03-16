@@ -1,0 +1,88 @@
+package service
+
+import (
+	"context"
+	"database/sql"
+	"golang-restful-api/helper"
+	"golang-restful-api/model/domain"
+	"golang-restful-api/model/web"
+	"golang-restful-api/repository"
+
+	"github.com/go-playground/validator/v10"
+)
+
+type CategoryServiceImpl struct {
+	CategoryRepository repository.CategoryRepository
+	DB                 *sql.DB
+	Validate           *validator.Validate
+}
+
+func (service *CategoryServiceImpl) Create(ctx context.Context, request web.CategoryCreateRequest) web.CategoryResponse {
+	err := service.Validate.Struct(request)
+	helper.HandleErrorWithPanic(err)
+
+	tx, err := service.DB.Begin()
+	helper.HandleErrorWithPanic(err)
+	defer helper.CommitOrRollback(tx)
+
+	category := domain.Category{
+		Name: request.Name,
+	}
+
+	category = service.CategoryRepository.Save(ctx, tx, category)
+
+	return helper.ConvertToCategoryResponse(category)
+}
+
+func (service *CategoryServiceImpl) Update(ctx context.Context, request web.CategoryUpdateRequest) web.CategoryResponse {
+	err := service.Validate.Struct(request)
+	helper.HandleErrorWithPanic(err)
+	
+	tx, err := service.DB.Begin()
+	helper.HandleErrorWithPanic(err)
+	defer helper.CommitOrRollback(tx)
+
+	// temukan id nya terlebih dahulu
+	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
+	helper.HandleErrorWithPanic(err)
+	// mengubah value field name dari variabel category sesuai request update
+	category.Name = request.Name
+	// lakukan update
+	category = service.CategoryRepository.Update(ctx, tx, category)
+
+	return helper.ConvertToCategoryResponse(category)
+}
+
+func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int) {
+	tx, err := service.DB.Begin()
+	helper.HandleErrorWithPanic(err)
+	defer helper.CommitOrRollback(tx)
+
+	// temukan id nya terlebih dahulu
+	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
+	helper.HandleErrorWithPanic(err)
+
+	service.CategoryRepository.Delete(ctx, tx, category.Id)
+}
+
+func (service *CategoryServiceImpl) FindById(ctx context.Context, categoryId int) web.CategoryResponse {
+	tx, err := service.DB.Begin()
+	helper.HandleErrorWithPanic(err)
+	defer helper.CommitOrRollback(tx)
+
+	// temukan id nya terlebih dahulu
+	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
+	helper.HandleErrorWithPanic(err)
+
+	return helper.ConvertToCategoryResponse(category)
+}
+
+func (service *CategoryServiceImpl) FindAll(ctx context.Context) []web.CategoryResponse {
+	tx, err := service.DB.Begin()
+	helper.HandleErrorWithPanic(err)
+	defer helper.CommitOrRollback(tx)
+
+	categories := service.CategoryRepository.FindAll(ctx, tx)
+
+	return helper.ConvertToCategoryResponses(categories)
+}

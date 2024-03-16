@@ -9,7 +9,6 @@ import (
 )
 
 type CategoryRepositoryImpl struct {
-	DB *sql.DB
 }
 
 func (repository *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, category domain.Category) domain.Category {
@@ -30,7 +29,7 @@ func (repository *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, 
 
 func (repository *CategoryRepositoryImpl) Update(ctx context.Context, tx *sql.Tx, category domain.Category) domain.Category {
 	query := "UPDATE categories SET name = ? WHERE id = ?"
-	_, err := tx.ExecContext(ctx, query, category.Name)
+	_, err := tx.ExecContext(ctx, query, category.Name, category.Id)
 	helper.HandleErrorWithPanic(err)
 	return category
 }
