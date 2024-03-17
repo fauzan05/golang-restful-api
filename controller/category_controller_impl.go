@@ -1,12 +1,13 @@
 package controller
 
 import (
-	"github.com/julienschmidt/httprouter"
 	"golang-restful-api/helper"
 	"golang-restful-api/model/web"
 	"golang-restful-api/service"
 	"net/http"
 	"strconv"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 type CategoryControllerImpl struct {
@@ -36,11 +37,10 @@ func (categoryController *CategoryControllerImpl) Create(w http.ResponseWriter, 
 func (categoryController *CategoryControllerImpl) Update(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	categoryUpdateRequest := web.CategoryUpdateRequest{}
 	helper.ReadFromRequestBody(r, &categoryUpdateRequest)
-
 	categoryId, err := strconv.Atoi(p.ByName("categoryId"))
 	helper.HandleErrorWithPanic(err)
 	categoryUpdateRequest.Id = categoryId
-
+	
 	categoryResponse := categoryController.CategoryService.Update(r.Context(), categoryUpdateRequest)
 	apiResponse := web.ApiResponse{
 		Code:   200,

@@ -26,8 +26,10 @@ func (repository *CategoryRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, 
 	query = "SELECT * FROM categories WHERE id = ?"
 	rows, _ := tx.QueryContext(ctx, query, id)
 	category = domain.Category{}
-	err = rows.Scan(&category.Id, &category.Name)
-	helper.HandleErrorWithPanic(err)
+	for rows.Next() {
+		err = rows.Scan(&category.Id, &category.Name)
+		helper.HandleErrorWithPanic(err)
+	}
 	return category
 }
 
@@ -48,21 +50,23 @@ func (repository *CategoryRepositoryImpl) FindById(ctx context.Context, tx *sql.
 	query := "SELECT * FROM categories WHERE id = ?"
 	rows, err := tx.QueryContext(ctx, query, categoryId)
 	helper.HandleErrorWithPanic(err)
+	defer rows.Close()
+
 	category := domain.Category{}
 	if rows.Next() {
 		err := rows.Scan(&category.Id, &category.Name)
 		helper.HandleErrorWithPanic(err)
 		return category, nil
 	} else {
-		return category, errors.New("Category is not found")
+		return category, errors.New("category is not found")
 	}
-	 
 }
 
 func (repository *CategoryRepositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []domain.Category {
 	query := "SELECT * FROM categories"
 	rows, err := tx.QueryContext(ctx, query)
 	helper.HandleErrorWithPanic(err)
+	defer rows.Close()
 
 	var categories []domain.Category
 

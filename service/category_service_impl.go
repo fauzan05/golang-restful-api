@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	// "fmt"
 	"golang-restful-api/helper"
 	"golang-restful-api/model/domain"
 	"golang-restful-api/model/web"
@@ -49,12 +50,16 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 	tx, err := service.DB.Begin()
 	helper.HandleErrorWithPanic(err)
 	defer helper.CommitOrRollback(tx)
-
+	
 	// temukan id nya terlebih dahulu
-	category, err := service.CategoryRepository.FindById(ctx, tx, request.Id)
+	findCategory , err := service.CategoryRepository.FindById(ctx, tx, request.Id)
 	helper.HandleErrorWithPanic(err)
-	// mengubah value field name dari variabel category sesuai request update
-	category.Name = request.Name
+	category := domain.Category{
+		Id: findCategory.Id,
+		Name: request.Name,
+	}
+	// fmt.Println(category)
+
 	// lakukan update
 	category = service.CategoryRepository.Update(ctx, tx, category)
 
