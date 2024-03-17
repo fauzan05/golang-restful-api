@@ -26,7 +26,7 @@ func (categoryController *CategoryControllerImpl) Create(w http.ResponseWriter, 
 
 	categoryResponse := categoryController.CategoryService.Create(r.Context(), categoryCreateRequest)
 	apiResponse := web.ApiResponse{
-		Code:   200,
+		Code:   201,
 		Status: "Success create category",
 		Data:   categoryResponse,
 	}

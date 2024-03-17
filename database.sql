@@ -1,6 +1,8 @@
 create database golang_restful_api;
+create database golang_restful_api_test;
 
 use golang_restful_api;
+use golang_restful_api_test;
 
 create table categories 
 (

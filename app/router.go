@@ -2,7 +2,6 @@ package app
 
 import (
 	"golang-restful-api/controller"
-
 	"github.com/julienschmidt/httprouter"
 )
 
