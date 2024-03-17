@@ -3,7 +3,9 @@ package service
 import (
 	"context"
 	"database/sql"
+
 	// "fmt"
+	"golang-restful-api/exception"
 	"golang-restful-api/helper"
 	"golang-restful-api/model/domain"
 	"golang-restful-api/model/web"
@@ -53,7 +55,10 @@ func (service *CategoryServiceImpl) Update(ctx context.Context, request web.Cate
 	
 	// temukan id nya terlebih dahulu
 	findCategory , err := service.CategoryRepository.FindById(ctx, tx, request.Id)
-	helper.HandleErrorWithPanic(err)
+	// helper.HandleErrorWithPanic(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	category := domain.Category{
 		Id: findCategory.Id,
 		Name: request.Name,
@@ -73,7 +78,10 @@ func (service *CategoryServiceImpl) Delete(ctx context.Context, categoryId int) 
 
 	// temukan id nya terlebih dahulu
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
-	helper.HandleErrorWithPanic(err)
+	// helper.HandleErrorWithPanic(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.CategoryRepository.Delete(ctx, tx, category.Id)
 }
@@ -85,7 +93,10 @@ func (service *CategoryServiceImpl) FindById(ctx context.Context, categoryId int
 
 	// temukan id nya terlebih dahulu
 	category, err := service.CategoryRepository.FindById(ctx, tx, categoryId)
-	helper.HandleErrorWithPanic(err)
+	// helper.HandleErrorWithPanic(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ConvertToCategoryResponse(category)
 }
