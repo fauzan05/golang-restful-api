@@ -11,7 +11,12 @@ import (
 type CategoryRepositoryImpl struct {
 }
 
-func NewCategoryRepository() CategoryRepository {
+// bisa seperti ini
+// func NewCategoryRepository() CategoryRepository {
+// 	return &CategoryRepositoryImpl{}
+// }
+// atau seperti ini
+func NewCategoryRepository() *CategoryRepositoryImpl {
 	return &CategoryRepositoryImpl{}
 }
 
