@@ -1,9 +1,0 @@
-{
-    "editor.codeActionWidget.showHeaders": true,
-    "editor.quickSuggestionsDelay": 10,
-    "editor.quickSuggestions": {
-        "other": true,
-        "comments": false,
-        "strings": false
-      },
-}

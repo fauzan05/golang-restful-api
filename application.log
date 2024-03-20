@@ -1,3 +1,1 @@
-time="2024-03-19T20:54:15+07:00" level=info msg="Informasi Log Yang Tersimpan di application.log"
-time="2024-03-19T20:55:23+07:00" level=info msg="Informasi Log Yang Tersimpan di application.log"
-time="2024-03-19T20:55:23+07:00" level=warning msg="Informasi Log Yang Tersimpan di application.log"
+time="2024-03-20T21:28:13+07:00" level=error msg="{category is not found}"
