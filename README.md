@@ -1,3 +1,6 @@
+Sekedar buat belajar restful-api di Go.
+Sample hanya menggunakan category sebagai CRUD
+
 ---- Migration -----
 Cara instal migration :
 go install -tags 'mysql' github.com/golang-migrate/migrate@latest
@@ -16,3 +19,6 @@ migrate -database "mysql://root@tcp(localhost:3306)/golang_restful_api" -path da
 
 Cara run api :
 go run main.go wire_gen.go
+
+Docs validator :
+https://pkg.go.dev/github.com/go-playground/validator/v10
