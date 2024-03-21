@@ -7,8 +7,10 @@ import (
 )
 
 func NewDBProduction() *sql.DB {
+	db_config := helper.GetDatabaseConfigProd()
+
 	// user:password@tcp(localhost:5555)/dbname?tls=skip-verify&autocommit=true
-	db, err := sql.Open("mysql", "root@tcp(localhost:3306)/golang_restful_api")
+	db, err := sql.Open(db_config.Type, db_config.Username + "@tcp(" + db_config.Host + ":" + db_config.Port + ")/" + db_config.Name)
 	helper.HandleErrorWithPanic(err)
 
 	db.SetMaxIdleConns(5)
@@ -20,8 +22,10 @@ func NewDBProduction() *sql.DB {
 }
 
 func NewDBTest() *sql.DB {
+	db_config := helper.GetDatabaseConfigTest()
+
 	// user:password@tcp(localhost:5555)/dbname?tls=skip-verify&autocommit=true
-	db, err := sql.Open("mysql", "root@tcp(localhost:3306)/golang_restful_api_test")
+	db, err := sql.Open(db_config.Type, db_config.Username + "@tcp(" + db_config.Host + ":" + db_config.Port + ")/" + db_config.Name)
 	helper.HandleErrorWithPanic(err)
 
 	db.SetMaxIdleConns(5)
